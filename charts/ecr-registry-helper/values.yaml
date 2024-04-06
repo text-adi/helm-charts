@@ -1,0 +1,14 @@
+image:
+  registry: docker.io
+  repository: textadi/ecr-registry-helper
+  tag: 2.15.36-1.29.3
+
+aws:
+  accessKeyID: ""
+  secretAccessKey: ""
+  account: ""
+
+  region: "eu-central-1"
+
+secretName: "regcred"
+
