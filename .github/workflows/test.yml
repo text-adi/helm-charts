@@ -21,7 +21,6 @@ jobs:
       - name: Check all charts
         working-directory: charts
         id: _tmp_path_to_charts
-#        run: echo "value=$(echo "['ubuntu-latest']")" >> "$GITHUB_OUTPUT"
         run: echo "value=$(echo "["$(find . -maxdepth 1 -mindepth 1 -type d -exec realpath {} \; | sed  "s/.*/'&'/" | paste -sd, -)"]")" >> "$GITHUB_OUTPUT"
 
       - name: Create dynamic vars
@@ -56,4 +55,14 @@ jobs:
         working-directory: ${{ matrix.path }}
         run: |
           helm kubeconform --verbose --summary .
+
+  lint-security:
+    needs: [ vars ]
+    name: Check security by kyvenro
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check kubectl
+        run: kubectl krew install kyverno
+
 
