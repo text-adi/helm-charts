@@ -22,7 +22,10 @@ jobs:
         working-directory: charts
         id: _tmp_path_to_charts
         run: |
-          echo "value=[$(find . -maxdepth 1 -mindepth 1 -type d -exec realpath {} \; | sed 's/.*/"&"/' | paste -sd, -)]" >> "$GITHUB_OUTPUT"
+          echo "value=[\"One String\", \"Another String\"]" >> $GITHUB_OUTPUT 
+
+#          echo "value=[$(find . -maxdepth 1 -mindepth 1 -type d -exec realpath {} \; | sed 's/.*/"&"/' | paste -sd, -)]" >> "$GITHUB_OUTPUT"
+
       - name: Create dynamic vars
         id: dynamic
         run: |
@@ -44,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        path: ${{ fromJson(needs.vars.outputs.path_to_charts) }}
+        path: ${{ needs.vars.outputs.path_to_charts }}
 
     steps:
       - uses: actions/checkout@v4
