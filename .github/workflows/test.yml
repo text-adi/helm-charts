@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        path: ${{ fromJson(needs.vars.output.path_to_charts) }}
+        path: ${{ needs.vars.output.path_to_charts }}
 
     steps:
       - uses: actions/checkout@v4
