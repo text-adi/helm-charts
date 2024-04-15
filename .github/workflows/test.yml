@@ -21,9 +21,8 @@ jobs:
       - name: Check all charts
         working-directory: charts
         id: _tmp_path_to_charts
-        run: echo "value=$(echo "['ubuntu-latest']")" >> "$GITHUB_OUTPUT"
-
-#          echo "value=[$(find . -maxdepth 1 -mindepth 1 -type d -exec realpath {} \; | sed 's/.*/"&"/' | paste -sd, -)]" >> "$GITHUB_OUTPUT"
+#        run: echo "value=$(echo "['ubuntu-latest']")" >> "$GITHUB_OUTPUT"
+        run: echo "value=$(echo "["$(find . -maxdepth 1 -mindepth 1 -type d -exec realpath {} \; | sed  "s/.*/'&'/" | paste -sd, -)"]")" >> "$GITHUB_OUTPUT"
 
       - name: Create dynamic vars
         id: dynamic
