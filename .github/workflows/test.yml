@@ -64,7 +64,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Kyverno CLI
         uses: kyverno/action-install-cli@v0.2.0
-
-      - name: Check kyverno version
-        run: |
-          kubectl kyverno version
+      - name: Check install
+        run: kyverno version
