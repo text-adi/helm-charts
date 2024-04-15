@@ -73,9 +73,10 @@ jobs:
             tar zxvf "${KREW}.tar.gz" &&
             ./"${KREW}" install krew
           )
-          export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
       - name: Install kyverno
+        env:
+          PATH: ${KREW_ROOT:-$HOME/.krew}/bin:$PATH
         run: |
           kubectl krew install kyverno
 
