@@ -22,7 +22,7 @@ jobs:
         working-directory: charts
         id: _tmp_path_to_charts
         run: |
-          echo "value=$( echo $(find . -type d -exec realpath {} \;) }} )" >> "$GITHUB_OUTPUT"
+          echo "value=$( echo $(find . -maxdepth 1 -mindepth 1 -type d -exec realpath {} \;) }} )" >> "$GITHUB_OUTPUT"
       - name: Create dynamic vars
         id: dynamic
         run: |
