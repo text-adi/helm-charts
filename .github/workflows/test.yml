@@ -15,7 +15,7 @@ jobs:
     name: Generation vars
     runs-on: ubuntu-latest
     outputs:
-      path_to_charts: ${{ stepsl.dynamic.value.PATH_TO_CHARS }}
+      path_to_charts: ${{ steps.dynamic.outputs.PATH_TO_CHARS }}
     steps:
       - name: Check all charts
         working-directory: charts
