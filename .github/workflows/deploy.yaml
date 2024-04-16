@@ -23,6 +23,7 @@ jobs:
       cancel-in-progress: true
 
   deploy_to_pages:
+    needs: [ run_test ]
     name: Deploy helm charts to github pages
     runs-on: ubuntu-latest
     environment:
