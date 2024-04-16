@@ -1,8 +1,10 @@
 name: Test Helm Chart
 
 on:
-  push:
-    branches: [ dev ]
+  pull_request:
+    types:
+      - opened
+
   workflow_dispatch:
   workflow_call:
 

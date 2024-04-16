@@ -1,0 +1,55 @@
+name: Create Helm Chart
+
+on:
+  push:
+    branches: [ dev ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}-pages"
+  cancel-in-progress: true
+
+jobs:
+  run_test:
+    name: Run workflow - test
+    uses: ./.github/workflows/test.yaml
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-run_manual
+      cancel-in-progress: true
+
+  deploy_to_pages:
+    name: Deploy helm charts to github pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create package
+        working-directory: pages
+        run: |
+          helm package ../charts/*
+
+      - name: Create repo index
+        working-directory: pages
+        run: |
+          helm repo index --url ${{ github.repositoryUrl }} .
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Create branch
+        run: |
+          git push ${{ github.server_url }}/${{ github.repository }} ${{ github.base_ref }}:pages
