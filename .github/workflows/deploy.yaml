@@ -28,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Create package
@@ -52,7 +54,5 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Create branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push ${{ github.server_url }}/${{ github.repository }} ${{ github.base_ref }}:pages
