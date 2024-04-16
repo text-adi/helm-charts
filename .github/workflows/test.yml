@@ -28,19 +28,23 @@ jobs:
         run: |
           echo "PATH_TO_CHARS=${{ steps._tmp_path_to_charts.outputs.value }}" >> "$GITHUB_OUTPUT"
 
-  lint-best-practices:
+  lint-security-practices:
     needs: [ vars ]
-    name: Short check is valid schema # Поверхнева перевірка template. Не перевіряє, чи валідні template в k8s
+    if: false
+    name: Check security by kyvenro
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Lint - Best practices
-        working-directory: charts
-        run: helm lint *
+      - name: Install Kyverno CLI
+        uses: kyverno/action-install-cli@v0.2.0
+        with:
+          release: 'v1.10.3'
+      - name: Check install
+        run: kyverno version
 
-  lint-helm:
+  lint-k8s-good-practices:
     needs: [ vars ]
-    name: Check valid schema in k8s # поглинена перевірка template, чи відповідають стандарту k8s
+    name: Check valid schema in k8s by kubeconform # поглинена перевірка template, чи відповідають стандарту k8s
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -56,13 +60,13 @@ jobs:
         run: |
           helm kubeconform --verbose --summary .
 
-  lint-security:
+  lint-helm-chart-good-practices:
     needs: [ vars ]
-    name: Check security by kyvenro
+    name: Check helm charts good practices # Поверхнева перевірка template. Не перевіряє, чи валідні template в k8s
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Kyverno CLI
-        uses: kyverno/action-install-cli@v0.2.0
-      - name: Check install
-        run: kyverno version
+      - name: Lint - Best practices
+        working-directory: charts
+        run: helm lint *
+
