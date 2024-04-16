@@ -55,4 +55,4 @@ jobs:
 
       - name: Create branch
         run: |
-          git push ${{ github.server_url }}/${{ github.repository }} ${{ github.base_ref }}:pages
+          git push ${{ github.server_url }}/${{ github.repository }} ${{ github.ref_name }}:pages
