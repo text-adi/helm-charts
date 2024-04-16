@@ -1,14 +1,13 @@
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ .Release.Name | quote }}
+  name: {{ .Chart.Name | quote }}
   namespace: {{ .Release.Namespace | quote }}
 
 subjects:
   - kind: ServiceAccount
-    name: {{ .Release.Name | quote }}
-    apiGroup: rbac.authorization.k8s.io
+    name: {{ .Chart.Name | quote }}
 roleRef:
   kind: Role
-  name: {{ .Release.Name| quote }}
+  name: {{ .Chart.Name | quote }}
   apiGroup: rbac.authorization.k8s.io
