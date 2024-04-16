@@ -56,5 +56,5 @@ jobs:
       - name: Create branch
         run: |
           git add -A
-          git commit --allow-empty
+          git commit --allow-empty --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
           git push ${{ github.server_url }}/${{ github.repository }} ${{ github.ref_name }}:pages
