@@ -55,4 +55,6 @@ jobs:
 
       - name: Create branch
         run: |
+          git add -A
+          git commit --allow-empty
           git push ${{ github.server_url }}/${{ github.repository }} ${{ github.ref_name }}:pages
