@@ -58,5 +58,5 @@ jobs:
           git add -A
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git commit --allow-empty
+          git commit -m 'Create branch'
           git push ${{ github.server_url }}/${{ github.repository }} ${{ github.ref_name }}:pages
