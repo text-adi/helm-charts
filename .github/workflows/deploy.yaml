@@ -46,6 +46,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Test
+        run:
+          git checkout pages
+          git checkout dev
+
       - name: Create package
         working-directory: pages
         run: |
