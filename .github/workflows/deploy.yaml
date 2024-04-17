@@ -44,10 +44,17 @@ jobs:
       name: github-pages
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Create package
         working-directory: pages
         run: |
           helm package ../charts/*
+
+      - name: Create repo index
+        working-directory: pages
+        run: |
+          helm repo index --url ${{ github.repositoryUrl }} .
 
       - name: Update branch
         run: |
@@ -57,15 +64,6 @@ jobs:
           git commit -m 'Update branch'
           git checkout ${{ needs.vars.outputs.branch_pages }}
           git merge ${{ github.ref_name }}
-
-      - name: Create repo index
-        working-directory: pages
-        run: |
-          helm repo index --url ${{ github.repositoryUrl }} .
-
-      - name: Push branch
-        run: |
-          git push -d ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }} || true
           git push ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }}:${{ needs.vars.outputs.branch_pages }}
 
       - name: Setup Pages
