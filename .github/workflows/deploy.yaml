@@ -55,7 +55,7 @@ jobs:
       - name: Create repo index
         working-directory: pages
         run: |
-          helm repo index --url ${{ github.repositoryUrl }} .
+          helm repo index --url ${{ github.server_url }}/${{ github.repository }} .
 
       - name: New commit
         run: |
