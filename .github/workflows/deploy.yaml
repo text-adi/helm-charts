@@ -64,7 +64,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git commit -m 'Update branch'
       - run: git switch ${{ needs.vars.outputs.branch_pages }}
-      - run: git merge ${{ github.ref_name }}
+      - run: git merge -X theirs ${{ github.ref_name }}
       - run: git switch ${{ needs.vars.outputs.branch_pages }}
       - run: git push ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }}:${{ needs.vars.outputs.branch_pages }}
 
