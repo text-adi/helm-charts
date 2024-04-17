@@ -47,7 +47,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Test
-        working-directory: paths
+        working-directory: pages
         run: |
           git checkout pages
           ls -la
