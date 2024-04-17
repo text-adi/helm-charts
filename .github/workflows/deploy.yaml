@@ -47,9 +47,12 @@ jobs:
         with:
           fetch-depth: 0
       - name: Test
+        working-directory: paths
         run: |
           git checkout pages
+          ls -la
           git checkout dev
+          ls -la
 
       - name: Create package
         working-directory: pages
