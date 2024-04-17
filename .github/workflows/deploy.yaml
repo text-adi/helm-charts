@@ -47,7 +47,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Test
-        run:
+        run: |
           git checkout pages
           git checkout dev
 
