@@ -15,7 +15,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  vars:
+    name: Generation vars
+    runs-on: ubuntu-latest
+    outputs:
+      branch_pages: ${{ steps.dynamic.outputs.branch_pages }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create dynamic vars
+        id: dynamic
+        run: |
+          echo "branch_pages=pages" >> "$GITHUB_OUTPUT"
+
   run_test:
+    needs: [ vars ]
     name: Run workflow - test
     uses: ./.github/workflows/test.yaml
     concurrency:
@@ -23,13 +37,11 @@ jobs:
       cancel-in-progress: true
 
   deploy_to_pages:
-    needs: [ run_test ]
+    needs: [ vars, run_test ]
     name: Deploy helm charts to github pages
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Create package
@@ -37,10 +49,23 @@ jobs:
         run: |
           helm package ../charts/*
 
+      - name: Update branch
+        run: |
+          git add -A
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git commit -m 'Update branch'
+          git checkout ${{ needs.vars.outputs.branch_pages }}
+          git merge ${{ github.ref_name }}
+
       - name: Create repo index
         working-directory: pages
         run: |
           helm repo index --url ${{ github.repositoryUrl }} .
+
+      - name: Push branch
+        run: |
+          git push ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }}:${{ needs.vars.outputs.branch_pages }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -53,14 +78,3 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Delete branch
-        run: |
-          git push -d ${{ github.server_url }}/${{ github.repository }} pages || true
-
-      - name: Create branch
-        run: |
-          git add -A
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git commit -m 'Create branch'
-          git push ${{ github.server_url }}/${{ github.repository }} ${{ github.ref_name }}:pages
