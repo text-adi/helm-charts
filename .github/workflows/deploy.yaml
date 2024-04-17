@@ -63,9 +63,9 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git commit -m 'Update branch'
-      - run: git checkout ${{ needs.vars.outputs.branch_pages }}
+      - run: git switch ${{ needs.vars.outputs.branch_pages }}
       - run: git merge ${{ github.ref_name }}
-      - run: git checkout ${{ needs.vars.outputs.branch_pages }}
+      - run: git switch ${{ needs.vars.outputs.branch_pages }}
       - run: git push ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }}:${{ needs.vars.outputs.branch_pages }}
 
       - name: Setup Pages
