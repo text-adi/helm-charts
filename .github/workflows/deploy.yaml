@@ -65,6 +65,7 @@ jobs:
 
       - name: Push branch
         run: |
+          git push -d ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }} || true
           git push ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }}:${{ needs.vars.outputs.branch_pages }}
 
       - name: Setup Pages
