@@ -64,7 +64,7 @@ jobs:
 
       - name: Run workflow
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           # need use this bad use for manual run workflow in specific branch 
           gh workflow run deploy-pages.yaml --ref ${{ needs.vars.outputs.branch_pages }}
