@@ -60,3 +60,8 @@ jobs:
           pages_branch: ${{ needs.vars.outputs.branch_pages }}
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run workflow
+        run: |
+          # need use this bad use for manual run workflow in specific branch 
+          gh workflow run deploy-pages.yaml --ref ${{ needs.vars.outputs.branch_pages }}
