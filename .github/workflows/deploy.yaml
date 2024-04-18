@@ -83,7 +83,8 @@ jobs:
 
       - name: Check index.yaml
         working-directory: pages
-        run: cat index.yaml
+        run: |
+          cat index.yaml
 
       - run: git push ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }}:${{ needs.vars.outputs.branch_pages }}
 
