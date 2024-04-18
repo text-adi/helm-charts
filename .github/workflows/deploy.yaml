@@ -60,11 +60,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git commit -m 'Update branch'
 
-      - run: git branch ${{ needs.vars.outputs.branch_pages }}
+      - name: Create branch if not exist
+        run: git switch ${{ needs.vars.outputs.branch_pages }} || git branch ${{ needs.vars.outputs.branch_pages }}
+
       - run: git switch ${{ needs.vars.outputs.branch_pages }}
       - run: git merge -X theirs ${{ github.ref_name }}
       - run: git switch ${{ needs.vars.outputs.branch_pages }}
-
 
       - name: Create repo index
         working-directory: pages
