@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write
-  id-token: read
+  id-token: write
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}-create-helm-chart"
