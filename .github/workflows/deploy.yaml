@@ -63,6 +63,8 @@ jobs:
       - run: git branch ${{ needs.vars.outputs.branch_pages }}
       - run: git switch ${{ needs.vars.outputs.branch_pages }}
       - run: git merge -X theirs ${{ github.ref_name }}
+      - run: git switch ${{ needs.vars.outputs.branch_pages }}
+
 
       - name: Create repo index
         working-directory: pages
