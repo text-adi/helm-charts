@@ -59,9 +59,11 @@ jobs:
           charts_dir: charts
           pages_branch: ${{ needs.vars.outputs.branch_pages }}
         env:
-          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_TOKEN: ${{ github.token }}
 
       - name: Run workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # need use this bad use for manual run workflow in specific branch 
           gh workflow run deploy-pages.yaml --ref ${{ needs.vars.outputs.branch_pages }}
