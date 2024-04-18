@@ -1,0 +1,102 @@
+name: Create Helm Chart
+
+on:
+  push: {}
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}-pages"
+  cancel-in-progress: true
+
+jobs:
+  vars:
+    name: Generation vars
+    runs-on: ubuntu-latest
+    outputs:
+      branch_pages: ${{ steps.dynamic.outputs.branch_pages }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create dynamic vars
+        id: dynamic
+        run: |
+          echo "branch_pages=pages" >> "$GITHUB_OUTPUT"
+
+  run_test:
+    needs: [ vars ]
+    name: Run workflow - test
+    uses: ./.github/workflows/test.yaml
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-run_manual
+      cancel-in-progress: true
+
+  deploy_to_pages:
+    needs: [ vars, run_test ]
+    name: Deploy helm charts to github pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create package
+        working-directory: pages
+        run: |
+          helm package ../charts/*
+
+      - name: New commit
+        working-directory: pages
+        run: |
+          git add .
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git commit -m 'Update branch'
+
+      - name: Create branch if not exist
+        run: git switch ${{ needs.vars.outputs.branch_pages }} || git branch ${{ needs.vars.outputs.branch_pages }}
+
+      - run: git switch ${{ needs.vars.outputs.branch_pages }}
+      - run: git merge -X theirs ${{ github.ref_name }}
+
+      - name: Create repo index
+        working-directory: pages
+        run: |
+          helm repo index --url ${{ github.server_url }}/${{ github.repository }} .
+
+      - name: New commit
+        working-directory: pages
+        run: |
+          git add .
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git commit -m 'Update index.yaml'
+
+      - name: Check dir
+        working-directory: pages
+        run: ls -la
+
+      - name: Check index.yaml
+        working-directory: pages
+        run: |
+          cat index.yaml
+
+      - run: git push ${{ github.server_url }}/${{ github.repository }} ${{ needs.vars.outputs.branch_pages }}:${{ needs.vars.outputs.branch_pages }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: 'pages'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
