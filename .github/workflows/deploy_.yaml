@@ -1,7 +1,6 @@
 name: Create Helm Chart
 
 on:
-  push: {}
   workflow_dispatch:
 
 permissions:
