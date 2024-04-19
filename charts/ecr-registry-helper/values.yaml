@@ -3,7 +3,7 @@
 image:
   registry: docker.io
   repository: textadi/ecr-registry-helper
-  tag: 2.15.38-1.29.3
+  tag: 2.15.39-1.30.0
 
 ## @section Another parameters
 ##
