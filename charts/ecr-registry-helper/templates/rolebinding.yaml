@@ -7,6 +7,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: {{ .Chart.Name | quote }}
+    namespace: {{ .Release.Namespace | quote }}
 roleRef:
   kind: Role
   name: {{ .Chart.Name | quote }}
