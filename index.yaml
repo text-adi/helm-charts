@@ -3,6 +3,17 @@ entries:
   ecr-registry-helper:
   - apiVersion: v2
     appVersion: 2.15.39-1.30.0
+    created: "2024-04-19T20:35:59.833776471Z"
+    description: A utility that provides seamless access to Amazon ECR private storage.
+      Dynamically updates accesses to the repository.
+    digest: 7c6944d02b4a0f5e8eed7985eee2cbdd29cd9ce8519545b14a1778c7a05492b6
+    name: ecr-registry-helper
+    type: application
+    urls:
+    - https://github.com/text-adi/helm-charts/releases/download/ecr-registry-helper-0.1.7/ecr-registry-helper-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
+    appVersion: 2.15.39-1.30.0
     created: "2024-04-19T20:17:43.662833374Z"
     description: A utility that provides seamless access to Amazon ECR private storage.
       Dynamically updates accesses to the repository.
@@ -66,4 +77,4 @@ entries:
     urls:
     - https://github.com/text-adi/helm-charts/releases/download/ecr-registry-helper-0.1.1/ecr-registry-helper-0.1.1.tgz
     version: 0.1.1
-generated: "2024-04-19T20:17:43.662859914Z"
+generated: "2024-04-19T20:35:59.833808711Z"
