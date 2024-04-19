@@ -14,6 +14,9 @@ spec:
       containers:
         - name: {{ .Chart.Name | quote }}
           image: {{ include "erc-registry-helpers.image" . }}
+          env:
+            - name: NAMESPACE_NAME
+              value: {{ .Release.Namespace | quote }}
           envFrom:
             - secretRef:
                 name: {{ .Chart.Name | quote }}

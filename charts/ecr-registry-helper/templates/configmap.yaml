@@ -4,6 +4,5 @@ metadata:
   name: {{ .Chart.Name | quote }}
   namespace: {{ .Release.Namespace | quote }}
 data:
-  NAMESPACE_NAME: {{ .Release.Namespace | quote }}
   AWS_REGION: {{ .Values.aws.region | quote }}
   DOCKER_SECRET_NAME: {{ .Values.secretName | quote }}
