@@ -17,3 +17,6 @@ aws:
 secretName: "regcred"
 
 cronJobSchedule: "0 */1 * * *"
+
+successfulJobsHistoryLimit: 1
+failedJobsHistoryLimit: 1
