@@ -39,8 +39,6 @@ jobs:
     needs: [ vars, run_test ]
     name: Deploy helm charts to github pages
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
       - uses: actions/checkout@v4
         with:
