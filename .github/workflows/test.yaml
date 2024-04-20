@@ -100,6 +100,15 @@ jobs:
         run: |
            docker run -d --name k0s --hostname k0s --privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /var/lib/k0s -p 6443:6443 docker.io/k0sproject/k0s:${{ steps.last_tag_k0s.outputs.value }}
 
+      - name: Check k0s master
+        run: docker ps -a
+
+      - name: Sleep 30 second
+        run: sleep 30
+
+      - name: Check k0s master again
+        run: docker ps -a
+
       - name: Get token for connect new worker
         id: k0s
         run: |
