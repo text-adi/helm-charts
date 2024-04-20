@@ -155,5 +155,10 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
 
+      - name: Create values.yaml
+        run: |
+          echo ${{ secrets.VALUES }} | base64 -d > values.yaml 
+
       - name: Install helm chart
-        run: helm install -g ${{ matrix.path }} -n helm-test --create-namespace --debug
+        run: |
+          helm install -g ${{ matrix.path }} -n helm-test --create-namespace --debug -f values.yaml
