@@ -2,7 +2,7 @@ name: Create Helm Chart
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ prod ]
   workflow_dispatch:
 
 permissions:
