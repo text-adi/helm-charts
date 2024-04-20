@@ -4,6 +4,7 @@ on:
   pull_request:
     types:
       - opened
+      - review_requested
 
   workflow_dispatch:
   workflow_call:
