@@ -118,7 +118,7 @@ jobs:
 
       - run: kubectl version
 
-      - run: kubectl get nodes --no-headers | grep -c 'Ready'
+      - run: kubectl get nodes --no-headers
 
       - name: Verify k0s Nodes
         timeout-minutes: 5
