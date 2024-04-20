@@ -109,15 +109,15 @@ jobs:
           while true;
           do
             docker exec k0s cat /var/lib/k0s/pki/admin.conf > ~/.kube/config && break
-            sleep 5
+            sleep 1
           done
 
       - name: Check Ready nodes
         run: |
           while true;
           do
-            (kubectl get nodes k0s --no-headers | grep 'Ready') && break
-            echo 'Not ready k0s nodes'; sleep 5
+            (kubectl get nodes k0s --no-headers | grep ' Ready') && break
+            echo 'Not ready k0s nodes'; sleep 1
           done
 
       - run: kubectl version
@@ -132,11 +132,11 @@ jobs:
         timeout-minutes: 5
         env:
           COUNT_NODES: 2
-          TIMEOUT: 5
+          TIMEOUT: 1
         run: |
           while true;
           do
-            count=$(kubectl get nodes --no-headers | grep -c 'Ready')
+            count=$(kubectl get nodes --no-headers | grep -c ' Ready')
             if [[ "$count" == "${{ env.COUNT_NODES }}" ]]; then
               echo "All Nodes is ready"
               break;
