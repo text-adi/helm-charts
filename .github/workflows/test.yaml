@@ -113,7 +113,7 @@ jobs:
           done
 
       - name: Check Ready nodes
-        run:
+        run: |
           while true;
           do
             (kubectl get nodes k0s --no-headers | grep 'Ready') && break
