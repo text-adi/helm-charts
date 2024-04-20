@@ -124,7 +124,7 @@ jobs:
         run: |
           while true;
           do
-            count=$(JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]} {@.type}={@.status};{end}{end}' && kubectl get nodes -o jsonpath="$JSONPATH" | grep "Ready=True" | wc -l)
+            count=$(kubectl get nodes --no-headers | grep -c 'Ready')
             if [[ "$count" == "${{ env.COUNT_NODES }}" ]]; then
               echo "All Nodes is ready"
               break;
