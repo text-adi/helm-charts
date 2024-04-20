@@ -129,6 +129,7 @@ jobs:
               break;
             elif [[ "$count" != "${{ env.COUNT_NODES }}" ]]; then
               kubectl get nodes
+              echo "Count nodes ${count}" 
               echo 'Check again after ${{ env.TIMEOUT }} seconds';
               sleep ${{ env.TIMEOUT }};
             fi
