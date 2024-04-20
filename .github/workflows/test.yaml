@@ -162,4 +162,4 @@ jobs:
 
       - name: Install helm chart
         run: |
-          helm install -g ${{ matrix.path }} -n helm-test --create-namespace --debug -f values.yaml
+          helm install -g ${{ matrix.path }} -n helm-test --create-namespace -f values.yaml
