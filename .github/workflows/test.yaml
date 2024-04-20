@@ -159,10 +159,6 @@ jobs:
         run: |
           echo ${{ secrets.VALUES }} | base64 -d > values.yaml 
 
-      - name: Check values.yaml
-        run: |
-          cat values.yaml
-
       - name: Install helm chart
         run: |
           helm install -g ${{ matrix.path }} -n helm-test --create-namespace --debug -f values.yaml
