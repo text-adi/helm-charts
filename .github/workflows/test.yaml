@@ -103,7 +103,7 @@ jobs:
       - name: Check k0s master
         run: docker ps -a
 
-      - name: Sleep 30 second
+      - name: Sleep 30 seconds
         run: sleep 30
 
       - name: Check k0s master again
@@ -112,7 +112,7 @@ jobs:
       - name: Get token for connect new worker
         id: k0s
         run: |
-          echo "token=$(docker exec -t -i k0s k0s token create --role=worker)" >> $GITHUB_OUTPUT
+          echo "token=$(docker exec -i k0s k0s token create --role=worker)" >> $GITHUB_OUTPUT
           echo "conf_admin=$(docker exec k0s cat /var/lib/k0s/pki/admin.conf)" >> $GITHUB_OUTPUT
 
       - name: Run worker
