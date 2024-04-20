@@ -77,7 +77,8 @@ jobs:
     needs: [ vars, lint-k8s-good-practices, lint-helm-chart-good-practices ]
     name: Check install helm chart in k0s
     runs-on: ubuntu-latest
-    environment: ${{ matrix.path }}
+    environment:
+      name: ${{ matrix.path }}
     strategy:
       matrix:
         path: ${{ fromJson(needs.vars.outputs.path_to_charts) }}
