@@ -74,7 +74,7 @@ jobs:
 
 
   lint-helm-install-in-k0s:
-    needs: [ vars, lint-security-practices, lint-k8s-good-practices, lint-helm-chart-good-practices ]
+    needs: [ vars, lint-k8s-good-practices, lint-helm-chart-good-practices ]
     name: Check install helm chart in k0s
     runs-on: ubuntu-latest
     strategy:
