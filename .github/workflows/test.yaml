@@ -121,7 +121,6 @@ jobs:
           COUNT_NODES: 2
           TIMEOUT: 5
         run: |
-          timeout=${{ env.TIMEOUT }}
           while true;
           do
             count=$(JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]} {@.type}={@.status};{end}{end}' && kubectl get nodes -o jsonpath="$JSONPATH" | grep "Ready=True" | wc -l)
@@ -129,7 +128,8 @@ jobs:
               echo "All Nodes is ready"
               break;
             elif [[ "$count" != "${{ env.COUNT_NODES }}" ]]; then
-              echo 'Check again after $timeout seconds';
-              sleep $timeout;
+              kubectl get nodes
+              echo 'Check again after ${{ env.TIMEOUT }} seconds';
+              sleep ${{ env.TIMEOUT }};
             fi
           done
