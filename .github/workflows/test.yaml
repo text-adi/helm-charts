@@ -106,20 +106,20 @@ jobs:
       - name: Sleep 30 seconds
         run: sleep 5
 
-
-      - name: Get token for connect new worker
-        id: k0s
+      - name: Get admin
+        id: k0s-admin
         run: |
-          echo "token=$(docker exec -i k0s k0s token create --role=worker)" >> $GITHUB_OUTPUT
-          echo "conf_admin=$(docker exec k0s cat /var/lib/k0s/pki/admin.conf | base64)" >> $GITHUB_OUTPUT
+          echo "value=$(docker exec k0s cat /var/lib/k0s/pki/admin.conf | base64)" >> $GITHUB_OUTPUT
 
       - name: Run worker
-        run: docker run -d --name k0s-worker1 --hostname k0s-worker1 --privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /var/lib/k0s docker.io/k0sproject/k0s:${{ steps.last_tag_k0s.outputs.value }} k0s worker ${{ steps.k0s.outputs.token }}
+        run: |
+          token=$(docker exec -i k0s k0s token create --role=worker)
+          docker run -d --name k0s-worker1 --hostname k0s-worker1 --privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /var/lib/k0s docker.io/k0sproject/k0s:${{ steps.last_tag_k0s.outputs.value }} k0s worker $token
 
       - name: Configuration kubectl
         uses: tale/kubectl-action@v1
         with:
-          base64-kube-config: ${{ steps.k0s.outputs.conf_admin }}
+          base64-kube-config: ${{ steps.k0s-admin.outputs.value }}
 
       - name: Verify k0s Nodes
         env:
