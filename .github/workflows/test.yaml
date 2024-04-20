@@ -5,6 +5,7 @@ on:
     types:
       - opened
       - review_requested
+      - reopened
 
   workflow_dispatch:
   workflow_call:
