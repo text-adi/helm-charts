@@ -109,7 +109,7 @@ jobs:
           while true;
           do
             docker exec k0s cat /var/lib/k0s/pki/admin.conf > ~/.kube/config && break
-            sleep 1
+            sleep 5
           done
 
       - name: Check Ready nodes
@@ -117,7 +117,7 @@ jobs:
           while true;
           do
             (kubectl get nodes k0s --no-headers | grep 'Ready') && break
-            echo 'Not ready k0s nodes'; sleep 1
+            echo 'Not ready k0s nodes'; sleep 5
           done
 
       - run: kubectl version
