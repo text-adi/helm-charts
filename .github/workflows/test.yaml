@@ -100,16 +100,25 @@ jobs:
         run: |
            docker run -d --name k0s --hostname k0s --privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /var/lib/k0s -p 6443:6443 docker.io/k0sproject/k0s:${{ steps.last_tag_k0s.outputs.value }}
 
-      - name: Check k0s master
-        run: docker ps -a
 
-      - name: Sleep 30 seconds
-        run: sleep 30
+      - name: Create dir
+        run: mkdir -p ~/.kube
 
-      - name: Import config
+      - name: Get admin conf
         run: |
-          mkdir -p ~/.kube
-          docker exec k0s cat /var/lib/k0s/pki/admin.conf > ~/.kube/config 
+          while true;
+          do
+            docker exec k0s cat /var/lib/k0s/pki/admin.conf > ~/.kube/config && break
+            sleep 1
+          done
+
+      - name: Check Ready nodes
+        run:
+          while true;
+          do
+            (kubectl get nodes k0s --no-headers | grep 'Ready') && break
+            echo 'Not ready k0s nodes'; sleep 1
+          done
 
       - run: kubectl version
 
