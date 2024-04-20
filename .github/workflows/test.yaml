@@ -108,6 +108,7 @@ jobs:
 
       - name: Import config
         run: |
+          mkdir -p ~/.kube
           docker exec k0s cat /var/lib/k0s/pki/admin.conf > ~/.kube/config 
 
       - name: Run worker
