@@ -103,6 +103,10 @@ jobs:
       - name: Check k0s master
         run: docker ps -a
 
+      - name: Sleep 30 seconds
+        run: sleep 5
+
+
       - name: Get token for connect new worker
         id: k0s
         run: |
