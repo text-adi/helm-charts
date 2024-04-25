@@ -13,6 +13,15 @@ Example:
 helm install ecr-registry-helper textadi/ecr-registry-helper
 ```
 
+## Installing the Chart
+
+To update the chart:
+
+```console
+helm upgrade ecr-registry-helper textadi/ecr-registry-helper
+```
+
+
 ## Parameters
 
 | Name                         | Description                                                                                                                                        | Value                         |
