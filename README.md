@@ -1,3 +1,6 @@
+[![Test Helm Chart](https://github.com/text-adi/helm-charts/actions/workflows/test.yaml/badge.svg)](https://github.com/text-adi/helm-charts/actions/workflows/test.yaml)
+[![Deploy GitHub Pages](https://github.com/text-adi/helm-charts/actions/workflows/deploy-pages.yaml/badge.svg)](https://github.com/text-adi/helm-charts/actions/workflows/deploy-pages.yaml)
+
 # The My Library for Kubernetes
 
 ## Add repository
