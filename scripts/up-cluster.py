@@ -1,0 +1,23 @@
+import sys
+
+from cluster import K0SCluster
+
+
+def main(*args, **kwargs):
+
+    params = dict()
+
+    for arg in args:
+        arg: str
+        if '=' in arg and arg.startswith('--'):
+            key, value = arg.lstrip('-').split('=')
+            params[key] = value
+    cluster = K0SCluster(params['tag'])
+    cluster.delete_cluster()
+    cluster.create_master()
+    cluster.create_workers(int(params['workers']))
+    print(cluster.admin_config)
+
+
+if __name__ == '__main__':
+    main(*sys.argv)
