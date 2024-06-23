@@ -109,7 +109,6 @@ jobs:
         run: mkdir -p ~/.kube
 
       - name: Install requirements.txt
-        working-directory: scripts
         run: |
           pip install -r requirements.txt
 
