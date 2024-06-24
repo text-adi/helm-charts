@@ -1,0 +1,8 @@
+apiServer: https://localhost:6443
+
+
+image:
+  registry: docker.io
+  repository: textadi/kubectl
+  tag: 1.30.2
+

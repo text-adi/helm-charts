@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Chart.Name | quote }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      serviceAccountName: {{ .Chart.Name | quote }}
+      containers:
+        - name: "generation-kubeconfig"
+          image: {{ include "ci-cd-helper.image" . }}
+          env:
+            - name: NAMESPACE_NAME
+              value: {{ .Release.Namespace | quote }}
+            - name: SERVICE_ACCOUNT
+              value: {{ .Chart.Name | quote }}
+            - name: SECRET_NAME
+              value: {{ .Chart.Name | quote }}
+            - name: IP_ADDRESS
+              value: {{ .Values.apiServer }}
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - |
+              name_ci_cd=$SERVICE_ACCOUNT
+              server=$IP_ADDRESS
+              cluster='Cluster'
+
+              ca=$(kubectl get secret $SECRET_NAME -o jsonpath='{.data.ca\.crt}' -n $NAMESPACE_NAME)
+              token=$(kubectl get secret $SECRET_NAME -o jsonpath='{.data.token}' -n $NAMESPACE_NAME | base64 -d)
+
+              config=$(
+              echo "\
+              apiVersion: v1
+              kind: Config
+              clusters:
+              - name: ${cluster}
+                cluster:
+                  certificate-authority-data: ${ca}
+                  server: ${server}
+              contexts:
+              - name: ${NAMESPACE_NAME}
+                context:
+                  cluster: ${cluster}
+                  namespace: ${NAMESPACE_NAME}
+                  user: ${name_ci_cd}
+              current-context: ${NAMESPACE_NAME}
+              users:
+              - name: ${name_ci_cd}
+                user:
+                  token: ${token}
+              " | base64 -w 0)
+              kubectl create configmap config --from-literal=config=$config --namespace ${NAMESPACE_NAME}
+          imagePullPolicy: Always
+      restartPolicy: Never
