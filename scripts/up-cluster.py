@@ -1,10 +1,10 @@
 import sys
+import time
 
 from cluster import K0SCluster
 
 
 def main(*args, **kwargs):
-
     params = dict()
 
     for arg in args:
@@ -16,6 +16,10 @@ def main(*args, **kwargs):
     cluster.delete_cluster()
     cluster.create_master()
     cluster.create_workers(int(params['workers']))
+    while params['ready-wait']:
+        if cluster.is_ready_nodes():
+            break
+        time.sleep(1)
     print(cluster.admin_config)
 
 

@@ -115,30 +115,10 @@ jobs:
       - name: UP Cluster
         working-directory: scripts
         run: |
-          python up-cluster.py --tag=${{ steps.last_tag_k0s.outputs.value }} --workers=2 > ~/.kube/config 
+          python up-cluster.py --tag=${{ steps.last_tag_k0s.outputs.value }} --workers=2 --ready-wait=true > ~/.kube/config 
 
       - name: Check k0s version
         run: kubectl version
-
-      - name: Verify k0s Nodes
-        timeout-minutes: 5
-        env:
-          COUNT_NODES: 2
-          TIMEOUT: 1
-        run: |
-          while true;
-          do
-            count=$(kubectl get nodes --no-headers | grep -c ' Ready')
-            if [[ "$count" == "${{ env.COUNT_NODES }}" ]]; then
-              echo "All Nodes is ready"
-              break;
-            elif [[ "$count" != "${{ env.COUNT_NODES }}" ]]; then
-              kubectl get nodes
-              echo "Count nodes ${count}" 
-              echo 'Check again after ${{ env.TIMEOUT }} seconds';
-              sleep ${{ env.TIMEOUT }};
-            fi
-          done
 
       - name: Check Ready all nodes
         run: kubectl get nodes --no-headers

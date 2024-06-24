@@ -1,3 +1,4 @@
+import json
 import time
 
 import docker
@@ -38,7 +39,7 @@ class K0SCluster(object):
             name=container_name,
             hostname=container_name,
             privileged=True,
-            volumes={volume.name: {'bind':'/var/lib/k0s', 'mode': 'rw'}},
+            volumes={volume.name: {'bind': '/var/lib/k0s', 'mode': 'rw'}},
             ports={'6443/tcp': 6443},
             cgroupns='host',
             command='k0s controller',
@@ -68,6 +69,15 @@ class K0SCluster(object):
                 continue
             return result.output.decode('utf-8')
 
+    @property
+    def workers(self):
+        containers = self.client.containers.list(
+            filters=dict(
+                label=['item=cluster', 'product=k0s', 'type=worker'],
+            )
+        )
+        return containers
+
     def create_workers(self, count_nodes: int):
         """Run worker nodes"""
         token = self.master_token
@@ -88,7 +98,7 @@ class K0SCluster(object):
                 labels=labels,
                 name=container_name,
                 hostname=container_name,
-                volumes={volume.name: {'bind':'/var/lib/k0s', 'mode': 'rw'}},
+                volumes={volume.name: {'bind': '/var/lib/k0s', 'mode': 'rw'}},
                 privileged=True,
                 cgroupns='host',
                 command='k0s worker %s' % (token,),
@@ -117,3 +127,23 @@ class K0SCluster(object):
         )
         for volume in volumes:
             volume.remove(force=True)
+
+    def is_ready_nodes(self):
+        while True:
+            result: ExecResult = self.master.exec_run('k0s kubectl get nodes -o json')
+            if result.exit_code != 0:
+                time.sleep(1)
+                continue
+
+            workers = self.workers
+            output = result.output.decode('utf-8')
+            response_data = json.loads(output)
+            if not len(response_data['items']) == len(workers):
+                time.sleep(1)
+                continue
+
+            for item in response_data['items']:
+                last_status = item['status']['conditions'][-1]
+                if not last_status['type'] == 'Ready':
+                    return False
+            return True
