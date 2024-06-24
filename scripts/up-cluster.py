@@ -16,7 +16,7 @@ def main(*args, **kwargs):
     cluster.delete_cluster()
     cluster.create_master()
     cluster.create_workers(int(params['workers']))
-    while params['ready-wait']:
+    while params.get('ready-wait'):
         if cluster.is_ready_nodes():
             break
         time.sleep(1)
