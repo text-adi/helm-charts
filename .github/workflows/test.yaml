@@ -87,6 +87,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
 
       - name: Get last version k0s
         id: last_tag_k0s
@@ -100,57 +105,20 @@ jobs:
           	tail -n 1)
           echo "value=$version" >> $GITHUB_OUTPUT
 
-      - name: UP master k0s
-        run: |
-          docker run -d --name k0s --hostname k0s --privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /var/lib/k0s -p 6443:6443 docker.io/k0sproject/k0s:${{ steps.last_tag_k0s.outputs.value }}
-
       - name: Create dir
         run: mkdir -p ~/.kube
 
-      - name: Get admin conf
+      - name: Install requirements.txt
         run: |
-          while true;
-          do
-            docker exec k0s cat /var/lib/k0s/pki/admin.conf > ~/.kube/config && break
-            sleep 1
-          done
+          pip install -r requirements.txt
 
-      - name: Check Ready nodes
+      - name: UP Cluster
+        working-directory: scripts
         run: |
-          while true;
-          do
-            (kubectl get nodes k0s --no-headers | grep ' Ready') && break
-            echo 'Not ready k0s nodes'; sleep 1
-          done
+          python up-cluster.py --tag=${{ steps.last_tag_k0s.outputs.value }} --workers=2 --ready-wait=true > ~/.kube/config 
 
       - name: Check k0s version
         run: kubectl version
-
-      - name: Run worker
-        run: |
-          token=$(docker exec -i k0s k0s token create --role=worker)
-          docker run -d --name k0s-worker1 --hostname k0s-worker1 --privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /var/lib/k0s docker.io/k0sproject/k0s:${{ steps.last_tag_k0s.outputs.value }} k0s worker $token
-
-
-      - name: Verify k0s Nodes
-        timeout-minutes: 5
-        env:
-          COUNT_NODES: 2
-          TIMEOUT: 1
-        run: |
-          while true;
-          do
-            count=$(kubectl get nodes --no-headers | grep -c ' Ready')
-            if [[ "$count" == "${{ env.COUNT_NODES }}" ]]; then
-              echo "All Nodes is ready"
-              break;
-            elif [[ "$count" != "${{ env.COUNT_NODES }}" ]]; then
-              kubectl get nodes
-              echo "Count nodes ${count}" 
-              echo 'Check again after ${{ env.TIMEOUT }} seconds';
-              sleep ${{ env.TIMEOUT }};
-            fi
-          done
 
       - name: Check Ready all nodes
         run: kubectl get nodes --no-headers
