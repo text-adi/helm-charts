@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Chart.Name | quote }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  template:
+    spec:
+      serviceAccountName: {{ .Chart.Name | quote }}
+      containers:
+        - name: {{ .Chart.Name | quote }}
+          image: {{ include "erc-registry-helpers.image" . }}
+          env:
+            - name: NAMESPACE_NAME
+              value: {{ .Release.Namespace | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ .Chart.Name | quote }}
+            - configMapRef:
+                name: {{ .Chart.Name | quote }}
+          imagePullPolicy: Always
+      restartPolicy: Never

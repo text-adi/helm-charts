@@ -11,4 +11,8 @@ rules:
       - {{ .Values.secretName | quote }}
     verbs:
       - delete
+  - apiGroups: [ "" ]
+    resources:
+      - secrets
+    verbs:
       - create

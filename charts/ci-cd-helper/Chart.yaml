@@ -1,7 +1,6 @@
 apiVersion: v2
-name: ecr-registry-helper
-description: A utility that provides seamless access to Amazon ECR private storage. Dynamically updates accesses to the repository.
-
+name: ci-cd-helper
+description: A utility that generates a kubeconfig to access the namespace for CI/CD use cases
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
@@ -21,4 +20,4 @@ version: 1.0.0
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "2.15.40-1.30.0"
+appVersion: "1.30.2"

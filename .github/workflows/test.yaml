@@ -4,6 +4,8 @@ on:
   pull_request:
     types:
       - opened
+      - review_requested
+      - reopened
 
   workflow_dispatch:
   workflow_call:
@@ -72,3 +74,62 @@ jobs:
         working-directory: charts
         run: helm lint *
 
+
+  lint-helm-install-in-k0s:
+    needs: [ vars, lint-k8s-good-practices, lint-helm-chart-good-practices ]
+    name: Check install helm chart in k0s
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ matrix.path }}
+    strategy:
+      matrix:
+        path: ${{ fromJson(needs.vars.outputs.path_to_charts) }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
+
+      - name: Get last version k0s
+        id: last_tag_k0s
+        env:
+          DOCKERHUB_IMAGE: k0sproject/k0s
+        run: |
+          version=$(curl -L --fail "https://hub.docker.com/v2/repositories/${{ env.DOCKERHUB_IMAGE }}/tags/?page_size=1000" | \
+          	jq '.results | .[] | .name' -r | \
+          	sed 's/latest//' | \
+          	sort --version-sort | \
+          	tail -n 1)
+          echo "value=$version" >> $GITHUB_OUTPUT
+
+      - name: Create dir
+        run: mkdir -p ~/.kube
+
+      - name: Install requirements.txt
+        run: |
+          pip install -r requirements.txt
+
+      - name: UP Cluster
+        working-directory: scripts
+        run: |
+          python up-cluster.py --tag=${{ steps.last_tag_k0s.outputs.value }} --workers=2 --ready-wait=true > ~/.kube/config 
+
+      - name: Check k0s version
+        run: kubectl version
+
+      - name: Check Ready all nodes
+        run: kubectl get nodes --no-headers
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Create values.yaml
+        run: |
+          echo ${{ vars.VALUES }} | base64 -d > values.yaml 
+
+      - name: Install helm chart
+        run: |
+          helm install -g ${{ matrix.path }} -n helm-test --create-namespace -f values.yaml

@@ -4,9 +4,12 @@ on:
   push:
     branches: [ dev ]
   workflow_dispatch:
+  workflow_call:
+
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}-create-helm-chart"
@@ -38,8 +41,6 @@ jobs:
     needs: [ vars, run_test ]
     name: Deploy helm charts to github pages
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,10 +59,13 @@ jobs:
         with:
           charts_dir: charts
           pages_branch: ${{ needs.vars.outputs.branch_pages }}
+          skip_existing: true
         env:
-          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_TOKEN: ${{ github.token }}
 
       - name: Run workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # need use this bad use for manual run workflow in specific branch 
           gh workflow run deploy-pages.yaml --ref ${{ needs.vars.outputs.branch_pages }}

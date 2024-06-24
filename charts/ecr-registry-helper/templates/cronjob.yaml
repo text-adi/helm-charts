@@ -5,9 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 spec:
   schedule: {{ .Values.cronJobSchedule | quote }}
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
-  suspend: false
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit | int }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit | int }}
   jobTemplate:
     spec:
       template:
@@ -16,6 +15,9 @@ spec:
           containers:
             - name: {{ .Chart.Name | quote }}
               image: {{ include "erc-registry-helpers.image" . }}
+              env:
+                - name: NAMESPACE_NAME
+                  value: {{ .Release.Namespace | quote }}
               envFrom:
                 - secretRef:
                     name: {{ .Chart.Name | quote }}
