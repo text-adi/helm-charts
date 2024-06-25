@@ -59,7 +59,6 @@ jobs:
         with:
           charts_dir: charts
           pages_branch: ${{ needs.vars.outputs.branch_pages }}
-          skip_existing: false
         env:
           CR_TOKEN: ${{ github.token }}
 
