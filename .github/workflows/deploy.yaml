@@ -62,9 +62,6 @@ jobs:
         env:
           CR_TOKEN: ${{ github.token }}
 
-      - run: |
-          ls -la *
-
       - name: Run workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
