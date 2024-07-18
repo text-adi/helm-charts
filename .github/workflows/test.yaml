@@ -115,7 +115,7 @@ jobs:
       - name: UP Cluster
         working-directory: scripts
         run: |
-          python up-cluster.py --tag=${{ steps.last_tag_k0s.outputs.value }} --workers=2 --ready-wait=true > ~/.kube/config 
+          python -m cli up-cluster --tag ${{ steps.last_tag_k0s.outputs.value }} --workers 2 --ready-wait --force  > ~/.kube/config 
 
       - name: Check k0s version
         run: kubectl version
