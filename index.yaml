@@ -3,6 +3,17 @@ entries:
   ci-cd-helper:
   - apiVersion: v2
     appVersion: 1.30.2
+    created: "2024-07-19T08:24:15.884530042Z"
+    description: A utility that generates a kubeconfig to access the namespace for
+      CI/CD use cases
+    digest: 52f559e1cc8b9b9796a68306fa7169f0e8be0dd0284dae45eae8f3f8fcca93a9
+    name: ci-cd-helper
+    type: application
+    urls:
+    - https://github.com/text-adi/helm-charts/releases/download/ci-cd-helper-1.1.0/ci-cd-helper-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.30.2
     created: "2024-06-25T17:35:24.714144953Z"
     description: A utility that generates a kubeconfig to access the namespace for
       CI/CD use cases
@@ -100,4 +111,4 @@ entries:
     urls:
     - https://github.com/text-adi/helm-charts/releases/download/ecr-registry-helper-0.1.1/ecr-registry-helper-0.1.1.tgz
     version: 0.1.1
-generated: "2024-06-25T17:35:24.813341859Z"
+generated: "2024-07-19T08:24:15.884551914Z"
