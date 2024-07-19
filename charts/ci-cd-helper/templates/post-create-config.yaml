@@ -56,6 +56,6 @@ spec:
                 user:
                   token: ${token}
               " | base64 -w 0)
-              kubectl create configmap config --from-literal=config=$config --namespace ${NAMESPACE_NAME}
+              kubectl create configmap $SECRET_NAME --from-literal=config=$config --namespace ${NAMESPACE_NAME}
           imagePullPolicy: Always
       restartPolicy: Never
