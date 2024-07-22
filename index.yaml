@@ -14,6 +14,21 @@ entries:
     version: 0.1.0
   ci-cd-helper:
   - apiVersion: v2
+    appVersion: 1.2.1
+    created: "2024-07-22T10:28:51.912559175Z"
+    dependencies:
+    - name: basic
+      repository: https://text-adi.github.io/helm-charts/
+      version: 0.1.0
+    description: A utility that generates a kubeconfig to access the namespace for
+      CI/CD use cases
+    digest: 6192fb5fc9981e8146965d18b377871ea3d88a832d6fbaaad6322eec974ef8d6
+    name: ci-cd-helper
+    type: application
+    urls:
+    - https://github.com/text-adi/helm-charts/releases/download/ci-cd-helper-1.2.1/ci-cd-helper-1.2.1.tgz
+    version: 1.2.1
+  - apiVersion: v2
     appVersion: 1.2.0
     created: "2024-07-22T08:05:02.638345279Z"
     dependencies:
@@ -51,6 +66,21 @@ entries:
     - https://github.com/text-adi/helm-charts/releases/download/ci-cd-helper-1.0.0/ci-cd-helper-1.0.0.tgz
     version: 1.0.0
   ecr-registry-helper:
+  - apiVersion: v2
+    appVersion: 2.15.40-1.30.0
+    created: "2024-07-22T10:28:52.106059662Z"
+    dependencies:
+    - name: basic
+      repository: https://text-adi.github.io/helm-charts/
+      version: 0.1.0
+    description: A utility that provides seamless access to Amazon ECR private storage.
+      Dynamically updates accesses to the repository.
+    digest: d8c39f949efc874a0f4dd5a1da1dda43ab7692d72cb3a377ae95acb56c256bd9
+    name: ecr-registry-helper
+    type: application
+    urls:
+    - https://github.com/text-adi/helm-charts/releases/download/ecr-registry-helper-1.1.1/ecr-registry-helper-1.1.1.tgz
+    version: 1.1.1
   - apiVersion: v2
     appVersion: 2.15.40-1.30.0
     created: "2024-07-22T08:05:02.820431053Z"
@@ -153,4 +183,4 @@ entries:
     urls:
     - https://github.com/text-adi/helm-charts/releases/download/ecr-registry-helper-0.1.1/ecr-registry-helper-0.1.1.tgz
     version: 0.1.1
-generated: "2024-07-22T08:05:02.820480565Z"
+generated: "2024-07-22T10:28:52.106123411Z"
