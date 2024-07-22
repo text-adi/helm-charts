@@ -85,7 +85,6 @@ jobs:
           echo ${{ vars.VALUES }} | base64 -d > values.yaml 
 
       - name: Lint - Best practices
-        working-directory: charts
         run: helm lint ${{ matrix.path }} -f values.yaml
 
 
