@@ -1,28 +1,28 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Chart.Name | quote }}
+  name: {{ include "basic.names.fullname" . }}
   annotations:
     "helm.sh/hook": post-install
     "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "basic.names.fullname.namespace" . | quote }}
 spec:
   backoffLimit: 1
   ttlSecondsAfterFinished: 300
   template:
     spec:
-      serviceAccountName: {{ .Chart.Name | quote }}
+      serviceAccountName: {{ include "basic.names.fullname" . | quote }}
       containers:
         - name: "generation-kubeconfig"
-          image: {{ include "ci-cd-helper.image" . }}
+          image: {{ include "basic.images.image" . }}
           env:
             - name: NAMESPACE_NAME
-              value: {{ .Release.Namespace | quote }}
+              value: {{ include "basic.names.fullname.namespace" . | quote }}
             - name: SERVICE_ACCOUNT
-              value: {{ .Chart.Name | quote }}
+              value: {{ include "basic.names.fullname" . | quote }}
             - name: SECRET_NAME
-              value: {{ .Chart.Name | quote }}
+              value: {{ include "basic.names.fullname" . | quote }}
             - name: IP_ADDRESS
               value: {{ .Values.apiServer }}
           command: [ "/bin/sh", "-c" ]

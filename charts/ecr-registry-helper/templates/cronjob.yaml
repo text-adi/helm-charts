@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .Chart.Name | quote }}
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "basic.names.fullname" . }}
+  namespace: {{ include "basic.names.fullname.namespace" .  | quote }}
 spec:
   schedule: {{ .Values.cronJobSchedule | quote }}
   successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit | int }}
@@ -11,17 +11,17 @@ spec:
     spec:
       template:
         spec:
-          serviceAccountName: {{ .Chart.Name | quote }}
+          serviceAccountName: {{ include "basic.names.fullname" . }}
           containers:
-            - name: {{ .Chart.Name | quote }}
-              image: {{ include "erc-registry-helpers.image" . }}
+            - name: {{ include "basic.names.fullname" . }}
+              image: {{ include "basic.images.image" . }}
               env:
                 - name: NAMESPACE_NAME
-                  value: {{ .Release.Namespace | quote }}
+                  value: {{ include "basic.names.fullname.namespace" . | quote }}
               envFrom:
                 - secretRef:
-                    name: {{ .Chart.Name | quote }}
+                    name: {{ include "basic.names.fullname" . }}
                 - configMapRef:
-                    name: {{ .Chart.Name | quote }}
+                    name: {{ include "basic.names.fullname" . }}
               imagePullPolicy: Always
           restartPolicy: Never
