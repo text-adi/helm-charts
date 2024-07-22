@@ -68,11 +68,25 @@ jobs:
     needs: [ vars ]
     name: Check helm charts good practices # Поверхнева перевірка template. Не перевіряє, чи валідні template в k8s
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ matrix.path }}
+    strategy:
+      matrix:
+        path: ${{ fromJson(needs.vars.outputs.path_to_charts) }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update dependencies
+        run: |
+          helm dependency update ${{ matrix.path }}
+
+      - name: Create values.yaml
+        run: |
+          echo ${{ vars.VALUES }} | base64 -d > values.yaml 
+
       - name: Lint - Best practices
         working-directory: charts
-        run: helm lint *
+        run: helm lint ${{ matrix.path }} -f values.yaml
 
 
   lint-helm-install-in-k0s:
