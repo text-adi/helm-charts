@@ -1,0 +1,6 @@
+dependencies:
+- name: basic
+  repository: https://text-adi.github.io/helm-charts/
+  version: 0.1.0
+digest: sha256:6363e3ff9fc892de879ee631f54486ef8b17175529e577eb3c8c50dbe8246e1a
+generated: "2024-07-22T10:49:54.433854963+03:00"
