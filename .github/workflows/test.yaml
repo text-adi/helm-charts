@@ -126,6 +126,10 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
 
+      - name: Update dependencies
+        run: |
+          helm dependency update ${{ matrix.path }}
+
       - name: Create values.yaml
         run: |
           echo ${{ vars.VALUES }} | base64 -d > values.yaml 
