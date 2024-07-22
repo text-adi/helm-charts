@@ -1,5 +1,17 @@
 apiVersion: v1
 entries:
+  basic:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-07-22T07:24:21.889848382Z"
+    description: A Library Helm Chart for grouping common logic between charts. This
+      chart is not deployable by itself.
+    digest: 617d98c4f9d7c9e50655f13865e9834c42c2c56ea89ec9004386168ef8808e9a
+    name: basic
+    type: library
+    urls:
+    - https://github.com/text-adi/helm-charts/releases/download/basic-0.1.0/basic-0.1.0.tgz
+    version: 0.1.0
   ci-cd-helper:
   - apiVersion: v2
     appVersion: 1.30.2
@@ -111,4 +123,4 @@ entries:
     urls:
     - https://github.com/text-adi/helm-charts/releases/download/ecr-registry-helper-0.1.1/ecr-registry-helper-0.1.1.tgz
     version: 0.1.1
-generated: "2024-07-19T08:24:15.884551914Z"
+generated: "2024-07-22T07:24:21.889871515Z"
