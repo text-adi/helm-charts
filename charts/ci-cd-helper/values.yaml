@@ -1,8 +1,15 @@
-apiServer: https://localhost:6443
+## @section Basic parameters
+##
+fullnameOverride: "ci-cd-helper"
 
-
+## @section Image parameters
+##
 image:
   registry: docker.io
   repository: textadi/kubectl
   tag: 1.30.2
+
+## @section Another parameters
+##
+apiServer: https://localhost:6443
 
