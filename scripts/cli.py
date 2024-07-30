@@ -13,8 +13,8 @@ def cli():
 @click.command('up-cluster')
 @click.option('--tag', help='Version docker images', type=str)
 @click.option('--workers', help='Count workers', type=int)
-@click.option('--ready-wait', is_flag=True, help='Count workers', type=bool, default=False)
-@click.option('--force', is_flag=True, help='Count workers', type=bool, default=False)
+@click.option('--ready-wait', is_flag=True, help='Wait for the cluster to be ready', type=bool, default=False)
+@click.option('--force', is_flag=True, help='Force up the cluster', type=bool, default=False)
 def up_cluster(tag: str, workers: int, ready_wait: bool, force: bool):
     cluster = K0SCluster(tag)
     if force:
