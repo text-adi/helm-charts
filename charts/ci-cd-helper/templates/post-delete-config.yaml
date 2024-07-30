@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "basic.names.fullname" . }}
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+  namespace: {{ include "basic.names.fullname.namespace" . | quote }}
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      serviceAccountName: {{ include "basic.names.fullname" . | quote }}
+      containers:
+        - name: "delete-kubeconfig"
+          image: {{ include "basic.images.image" . }}
+          env:
+            - name: NAMESPACE_NAME
+              value: {{ include "basic.names.fullname.namespace" . | quote }}
+            - name: SECRET_NAME
+              value: {{ include "basic.names.fullname" . | quote }}
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - |
+              kubectl delete configmap ${SECRET_NAME} --namespace ${NAMESPACE_NAME}
+          imagePullPolicy: Always
+      restartPolicy: Never
