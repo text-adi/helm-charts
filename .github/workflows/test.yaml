@@ -30,6 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       path_to_charts: ${{ steps.dynamic.outputs.PATH_TO_CHARS }}
+      status-lint-security-practices: ${{ steps.switcher.outputs.lint_security_practices }}
+      status-lint-helm-install-in-k0s-status: ${{ steps.switcher.outputs.lint_helm_install_in_k0s_status }}
     steps:
       - uses: actions/checkout@v4
 
@@ -43,16 +45,16 @@ jobs:
         run: |
           if [ -n '${{ inputs.lint-security-practices }}' ]
           then
-            echo "lint-security-practices=${{ inputs.lint-security-practices }}" >> "$GITHUB_OUTPUT"                    
+            echo "lint_security_practices=${{ inputs.lint-security-practices }}" >> "$GITHUB_OUTPUT"                    
           else
-            echo "lint-security-practices=false" >> "$GITHUB_OUTPUT"        
+            echo "lint_security_practices=false" >> "$GITHUB_OUTPUT"        
           fi
           
           if [ -n '${{ inputs.lint-helm-install-in-k0s-status }}' ]
           then
-            echo "lint-helm-install-in-k0s-status=${{ inputs.lint-helm-install-in-k0s-status }}" >> "$GITHUB_OUTPUT"                    
+            echo "lint_helm_install_in_k0s_status=${{ inputs.lint-helm-install-in-k0s-status }}" >> "$GITHUB_OUTPUT"                    
           else
-            echo "lint-helm-install-in-k0s-status=true" >> "$GITHUB_OUTPUT"        
+            echo "lint_helm_install_in_k0s_status=true" >> "$GITHUB_OUTPUT"        
           fi
 
       - name: Create dynamic vars
@@ -61,8 +63,8 @@ jobs:
           echo "PATH_TO_CHARS=${{ steps._tmp_path_to_charts.outputs.value }}" >> "$GITHUB_OUTPUT"
 
   lint-security-practices:
-    if: ${{ inputs.lint-security-practices }}
     needs: [ vars ]
+    if: ${{ needs.vars.outputs.status-lint-security-practices }}
     name: Check security by kyvenro
     runs-on: ubuntu-latest
     steps:
@@ -117,8 +119,8 @@ jobs:
 
 
   lint-helm-install-in-k0s:
-    if: ${{ inputs.lint-helm-install-in-k0s-status }}
     needs: [ vars, lint-k8s-good-practices, lint-helm-chart-good-practices ]
+    if: ${{ needs.vars.outputs.status-lint-helm-install-in-k0s-status }}
     name: Check install helm chart in k0s
     runs-on: ubuntu-latest
     environment:
