@@ -33,14 +33,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Test
-        run: |
-          echo '${{ inputs.lint-helm-install-in-k0s-status }}'
-
       - name: Check all charts
         working-directory: charts
         id: _tmp_path_to_charts
         run: echo "value=$(echo "["$(find . -maxdepth 1 -mindepth 1 -type d ! -name "basic" -exec realpath {} \; | sed  "s/.*/'&'/" | paste -sd, -)"]")" >> "$GITHUB_OUTPUT"
+
+      - name: Switcher jobs
+        id: switcher
+        run: |
+          if [ -n '${{ inputs.lint-security-practices }}' ]
+          then
+            echo "lint-security-practices=${{ inputs.lint-security-practices }}" >> "$GITHUB_OUTPUT"                    
+          else
+            echo "lint-security-practices=false" >> "$GITHUB_OUTPUT"        
+          fi
+          
+          if [ -n '${{ inputs.lint-helm-install-in-k0s-status }}' ]
+          then
+            echo "lint-helm-install-in-k0s-status=${{ inputs.lint-helm-install-in-k0s-status }}" >> "$GITHUB_OUTPUT"                    
+          else
+            echo "lint-helm-install-in-k0s-status=true" >> "$GITHUB_OUTPUT"        
+          fi
 
       - name: Create dynamic vars
         id: dynamic
