@@ -64,7 +64,7 @@ jobs:
 
   lint-security-practices:
     needs: [ vars ]
-    if: ${{ needs.vars.outputs.status-lint-security-practices }}
+    if: ${{ needs.vars.outputs.status-lint-security-practices == 'true' }}
     name: Check security by kyvenro
     runs-on: ubuntu-latest
     steps:
@@ -120,7 +120,7 @@ jobs:
 
   lint-helm-install-in-k0s:
     needs: [ vars, lint-k8s-good-practices, lint-helm-chart-good-practices ]
-    if: ${{ needs.vars.outputs.status-lint-helm-install-in-k0s-status }}
+    if: ${{ needs.vars.outputs.status-lint-helm-install-in-k0s-status == 'true' }}
     name: Check install helm chart in k0s
     runs-on: ubuntu-latest
     environment:
