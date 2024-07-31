@@ -9,6 +9,14 @@ on:
 
   workflow_dispatch:
   workflow_call:
+    inputs:
+      lint-security-practices:
+        type: boolean
+        default: false
+
+      lint-helm-install-in-k0s-status:
+        type: boolean
+        default: true
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}-${{ github.event.workflow_call.workflow_file }}"
@@ -89,6 +97,7 @@ jobs:
 
 
   lint-helm-install-in-k0s:
+    if: ${{ inputs.lint-helm-install-in-k0s-status }}
     needs: [ vars, lint-k8s-good-practices, lint-helm-chart-good-practices ]
     name: Check install helm chart in k0s
     runs-on: ubuntu-latest
