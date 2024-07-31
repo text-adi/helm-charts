@@ -11,10 +11,12 @@ on:
   workflow_call:
     inputs:
       lint-security-practices:
+        required: true
         type: boolean
         default: false
 
       lint-helm-install-in-k0s-status:
+        required: true
         type: boolean
         default: true
 
@@ -41,8 +43,8 @@ jobs:
           echo "PATH_TO_CHARS=${{ steps._tmp_path_to_charts.outputs.value }}" >> "$GITHUB_OUTPUT"
 
   lint-security-practices:
+    if: ${{ inputs.lint-security-practices }}
     needs: [ vars ]
-    if: false
     name: Check security by kyvenro
     runs-on: ubuntu-latest
     steps:
