@@ -5,6 +5,14 @@ on:
     branches: [ dev ]
   workflow_dispatch:
   workflow_call:
+    inputs:
+      lint-security-practices:
+        type: boolean
+        default: false
+
+      lint-helm-install-in-k0s-status:
+        type: boolean
+        default: true
 
 
 permissions:
@@ -33,6 +41,9 @@ jobs:
     needs: [ vars ]
     name: Run workflow - test
     uses: ./.github/workflows/test.yaml
+    with:
+     lint-security-practices: ${{ inputs.lint-security-practices }}
+     lint-helm-install-in-k0s-status: ${{ inputs.lint-helm-install-in-k0s-status }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-run_manual
       cancel-in-progress: true
