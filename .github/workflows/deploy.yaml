@@ -42,8 +42,8 @@ jobs:
     name: Run workflow - test
     uses: ./.github/workflows/test.yaml
     with:
-     lint-security-practices: ${{ inputs.lint-security-practices }}
-     lint-helm-install-in-k0s-status: ${{ inputs.lint-helm-install-in-k0s-status }}
+     lint-security-practices: ${{ inputs.lint-security-practices == 'true' }}
+     lint-helm-install-in-k0s-status: ${{ inputs.lint-helm-install-in-k0s-status == 'true' }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-run_manual
       cancel-in-progress: true
