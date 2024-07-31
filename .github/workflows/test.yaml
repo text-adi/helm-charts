@@ -9,6 +9,16 @@ on:
 
   workflow_dispatch:
   workflow_call:
+    inputs:
+      lint-security-practices:
+        required: true
+        type: boolean
+        default: false
+
+      lint-helm-install-in-k0s-status:
+        required: true
+        type: boolean
+        default: true
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}-${{ github.event.workflow_call.workflow_file }}"
@@ -20,12 +30,32 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       path_to_charts: ${{ steps.dynamic.outputs.PATH_TO_CHARS }}
+      status-lint-security-practices: ${{ steps.switcher.outputs.lint_security_practices }}
+      status-lint-helm-install-in-k0s-status: ${{ steps.switcher.outputs.lint_helm_install_in_k0s_status }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Check all charts
         working-directory: charts
         id: _tmp_path_to_charts
         run: echo "value=$(echo "["$(find . -maxdepth 1 -mindepth 1 -type d ! -name "basic" -exec realpath {} \; | sed  "s/.*/'&'/" | paste -sd, -)"]")" >> "$GITHUB_OUTPUT"
+
+      - name: Switcher jobs
+        id: switcher
+        run: |
+          if [ -n '${{ inputs.lint-security-practices }}' ]
+          then
+            echo "lint_security_practices=${{ inputs.lint-security-practices }}" >> "$GITHUB_OUTPUT"                    
+          else
+            echo "lint_security_practices=false" >> "$GITHUB_OUTPUT"        
+          fi
+          
+          if [ -n '${{ inputs.lint-helm-install-in-k0s-status }}' ]
+          then
+            echo "lint_helm_install_in_k0s_status=${{ inputs.lint-helm-install-in-k0s-status }}" >> "$GITHUB_OUTPUT"                    
+          else
+            echo "lint_helm_install_in_k0s_status=true" >> "$GITHUB_OUTPUT"        
+          fi
 
       - name: Create dynamic vars
         id: dynamic
@@ -34,7 +64,7 @@ jobs:
 
   lint-security-practices:
     needs: [ vars ]
-    if: false
+    if: ${{ needs.vars.outputs.status-lint-security-practices == 'true' }}
     name: Check security by kyvenro
     runs-on: ubuntu-latest
     steps:
@@ -90,6 +120,7 @@ jobs:
 
   lint-helm-install-in-k0s:
     needs: [ vars, lint-k8s-good-practices, lint-helm-chart-good-practices ]
+    if: ${{ needs.vars.outputs.status-lint-helm-install-in-k0s-status == 'true' }}
     name: Check install helm chart in k0s
     runs-on: ubuntu-latest
     environment:
