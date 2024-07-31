@@ -32,6 +32,11 @@ jobs:
       path_to_charts: ${{ steps.dynamic.outputs.PATH_TO_CHARS }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Test
+        run: |
+          echo '${{ inputs.lint-helm-install-in-k0s-status }}'
+
       - name: Check all charts
         working-directory: charts
         id: _tmp_path_to_charts
