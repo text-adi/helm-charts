@@ -11,12 +11,10 @@ on:
   workflow_call:
     inputs:
       lint-security-practices:
-        required: true
         type: boolean
         default: false
 
       lint-helm-install-in-k0s-status:
-        required: true
         type: boolean
         default: true
 
