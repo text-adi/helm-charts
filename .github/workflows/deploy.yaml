@@ -29,8 +29,28 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       branch_pages: ${{ steps.dynamic.outputs.branch_pages }}
+      status-lint-security-practices: ${{ steps.switcher.outputs.lint_security_practices }}
+      status-lint-helm-install-in-k0s-status: ${{ steps.switcher.outputs.lint_helm_install_in_k0s_status }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Switcher jobs
+        id: switcher
+        run: |
+          if [ -n '${{ inputs.lint-security-practices }}' ]
+          then
+            echo "lint_security_practices=${{ inputs.lint-security-practices }}" >> "$GITHUB_OUTPUT"                    
+          else
+            echo "lint_security_practices=false" >> "$GITHUB_OUTPUT"        
+          fi
+
+          if [ -n '${{ inputs.lint-helm-install-in-k0s-status }}' ]
+          then
+            echo "lint_helm_install_in_k0s_status=${{ inputs.lint-helm-install-in-k0s-status }}" >> "$GITHUB_OUTPUT"                    
+          else
+            echo "lint_helm_install_in_k0s_status=true" >> "$GITHUB_OUTPUT"        
+          fi
+      
 
       - name: Create dynamic vars
         id: dynamic
@@ -42,8 +62,8 @@ jobs:
     name: Run workflow - test
     uses: ./.github/workflows/test.yaml
     with:
-     lint-security-practices: ${{ inputs.lint-security-practices == 'true' }}
-     lint-helm-install-in-k0s-status: ${{ inputs.lint-helm-install-in-k0s-status == 'true' }}
+     lint-security-practices: ${{ needs.vars.outputs.status-lint-security-practices == 'true' }}
+     lint-helm-install-in-k0s-status: ${{ needs.vars.outputs.status-lint-helm-install-in-k0s-status == 'true' }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-run_manual
       cancel-in-progress: true
